@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</header>
+
+<body>
+    <div class="jumbotron text-center">
+        <h1>Real Time Notifications With Python And Postgres</h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <p id="log" class="col-lg-12">perro</p>
+        </div>
+    </div>
+</body>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    let socket = new WebSocket("ws://localhost:8000/eventos_nombre"),
+        $log = document.querySelector("#log");
+
+    socket.onmessage = function (event) {
+        // alert(`[message] Data received from server: ${event.data}`);
+        $log.innerHTML = event.data
+    };
+
+    socket.onclose = function (event) {
+        if (event.wasClean) {
+            alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+        } else {
+            // e.g. server process killed or network down
+            // event.code is usually 1006 in this case
+            alert('[close] Connection died');
+        }
+    };
+
+    socket.onerror = function (error) {
+        alert(`[error] ${error.message}`);
+    };
+
+
+</script>
+
+</html>
